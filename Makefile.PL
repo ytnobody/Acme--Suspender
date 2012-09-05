@@ -2,7 +2,13 @@ use inc::Module::Install;
 name 'Acme-Suspender';
 all_from 'lib/Acme/Suspender.pm';
 
-# requires '';
+requires 'Class::Accessor::Fast';
+
+requires 'Carp';
+requires 'Furl';
+requires 'JSON';
+requires 'Try::Tiny';
+requires 'URI';
 
 tests 't/*.t';
 author_tests 'xt';
