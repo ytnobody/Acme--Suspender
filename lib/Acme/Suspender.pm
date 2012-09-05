@@ -37,8 +37,8 @@ sub new {
     $opts{interval} ||= 6000;
     $opts{endpoint} ||= 'https://api.github.com/';
     $opts{parser}   ||= 'JSON';
-    $opts{agent}    ||= Furl->new( 
-        agent => join('/', $class, $VERSION), 
+    $opts{agent}    ||= Furl->new(
+        agent => join('/', $class, $VERSION),
         timeout => 10,
     );
 
@@ -54,12 +54,12 @@ sub get {
 
     my $res = $self->agent->get( $uri );
     Carp::croak( sprintf "%s(code:%s)", $res->content, $res->code ) unless $res->is_success;
-    return try { 
-        JSON->new->utf8->decode( $res->content ); 
+    return try {
+        JSON->new->utf8->decode( $res->content );
     } catch {
         Carp::croak( sprintf "%s(uri:%s)", $_, $uri->as_string );
     };
-    
+
 }
 
 sub get_pullreq {
@@ -69,7 +69,7 @@ sub get_pullreq {
     my $res = $self->get( sprintf "/repos/%s/%s/%s", $self->user, $self->repo, 'pulls' );
     $pullreq += scalar grep { /number/ } keys %{$_} for as_array $res;
 
-    return $pullreq;    
+    return $pullreq;
 }
 
 sub poll {
@@ -80,7 +80,7 @@ sub poll {
         # Following statements will replace from outputting message to outputting images.
         for my $i ( 0 .. scalar( @threshold ) / 2 ) {
             my $message = $threshold[$i * 2];
-            my $code = $threshold[($i * 2) - 1];
+            my $code = $threshold[($i * 2) + 1];
             if ( $code->( $pullreq ) ) {
                 say $message;
                 last;
