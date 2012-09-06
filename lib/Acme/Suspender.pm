@@ -19,7 +19,7 @@ our @threshold = (
     "I'm Okay." => sub { 1 },
 );
 
-__PACKAGE__->mk_accessors( qw( user repo parser agent interval endpoint ) );
+__PACKAGE__->mk_accessors( qw( user repo parser agent endpoint ) );
 
 sub as_array ($) {
     my $var = shift;
@@ -34,7 +34,6 @@ sub say ($) {
 sub new {
     my ( $class, %opts ) = @_;
 
-    $opts{interval} ||= 6000;
     $opts{endpoint} ||= 'https://api.github.com/';
     $opts{parser}   ||= 'JSON';
     $opts{agent}    ||= Furl->new(
@@ -72,21 +71,17 @@ sub get_pullreq {
     return $pullreq;
 }
 
-sub poll {
+sub main {
     my ( $self ) = @_;
-    while (1) {
-        my $pullreq = $self->get_pullreq;
 
-        # Following statements will replace from outputting message to outputting images.
-        for my $i ( 0 .. scalar( @threshold ) / 2 ) {
-            my $message = $threshold[$i * 2];
-            my $code = $threshold[($i * 2) + 1];
-            if ( $code->( $pullreq ) ) {
-                say $message;
-                last;
-            }
+    my $pullreq = $self->get_pullreq;
+    for my $i ( 0 .. scalar( @threshold ) / 2 ) {
+        my $message = $threshold[$i * 2];
+        my $code = $threshold[($i * 2) + 1];
+        if ( $code->( $pullreq ) ) {
+            say $message; #FIXME message -> image
+            last;
         }
-        sleep $self->interval;
     }
 }
 

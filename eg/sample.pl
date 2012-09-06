@@ -9,4 +9,4 @@ use Acme::Suspender;
 
 my $dan = Acme::Suspender->new( user => 'plack', repo => 'Plack' );
 
-$dan->poll;
+$dan->main;
