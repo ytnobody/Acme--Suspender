@@ -15,7 +15,7 @@ use File::Spec;
 use File::Basename;
 
 our @threshold = (
-    'too_much,jpg' => sub { shift > 29 },
+    'too_much.jpg' => sub { shift > 29 },
     'several.jpg'  => sub { shift > 10 },
     'few.jpg'      => sub { shift > 0 },
     "nothing.jpg"  => sub { 1 },
